@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
-
+use Inertia\Inertia;
 use App\Models\ContributionType;
 use Illuminate\Http\Request;
-
 class ContributionTypeController extends Controller
 {
     /**
@@ -12,9 +10,16 @@ class ContributionTypeController extends Controller
      */
     public function index()
     {
+        $contributionTypes = ContributionType::select(['id', 'name'])->with([
+            'contribution_rate:id,contribution_type_id,rate',
+        ])->get();
+        
+        dd ($contributionTypes);
+        return Inertia::render('contribution-type/index', [
+            'contributionTypes' => $contributionTypes,
+        ]);
         //
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -22,7 +27,6 @@ class ContributionTypeController extends Controller
     {
         //
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -30,7 +34,6 @@ class ContributionTypeController extends Controller
     {
         //
     }
-
     /**
      * Display the specified resource.
      */
@@ -38,7 +41,6 @@ class ContributionTypeController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -46,7 +48,6 @@ class ContributionTypeController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -54,7 +55,6 @@ class ContributionTypeController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      */

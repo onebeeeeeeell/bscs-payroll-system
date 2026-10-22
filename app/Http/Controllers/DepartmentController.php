@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
-
+use Inertia\Inertia;
 use App\Models\Department;
 use Illuminate\Http\Request;
-
 class DepartmentController extends Controller
 {
     /**
@@ -12,9 +10,15 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+        $departments = Department::select(['id', 'department_name'])->with([
+            'employees:id, first_name, last_name, suffix, position_id, department_id, date_hired, daily_rate, sss_no, philhealth_no, pagibig_no, tin_no, status',
+        ]);
+        dd($departments);
+        return Inertia::render('department/index', [
+            'departments' => $departments,
+        ]);
+            //
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -22,7 +26,6 @@ class DepartmentController extends Controller
     {
         //
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -30,7 +33,6 @@ class DepartmentController extends Controller
     {
         //
     }
-
     /**
      * Display the specified resource.
      */
@@ -38,7 +40,6 @@ class DepartmentController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -46,7 +47,6 @@ class DepartmentController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -54,7 +54,6 @@ class DepartmentController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      */

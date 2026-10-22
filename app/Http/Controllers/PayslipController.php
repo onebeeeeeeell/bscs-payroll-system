@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
-
+use Inertia\Inertia;
 use App\Models\Payslip;
 use Illuminate\Http\Request;
-
 class PayslipController extends Controller
 {
     /**
@@ -12,9 +10,16 @@ class PayslipController extends Controller
      */
     public function index()
     {
-        //
+        $payslips = Payslip::select(['id', 'payroll_id', 'date_generated'])->with([
+            'payrolls:id,employee_id,payroll_period_id,user_id,gross_pay,total_deductions,net_pay,date_processed',
+            ])->get();
+            
+            dd($payslips);
+            
+            return Inertia::render('payslip/index', [
+                'payslips' => $payslips,
+            ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -22,7 +27,6 @@ class PayslipController extends Controller
     {
         //
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -30,7 +34,6 @@ class PayslipController extends Controller
     {
         //
     }
-
     /**
      * Display the specified resource.
      */
@@ -38,7 +41,6 @@ class PayslipController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -46,7 +48,6 @@ class PayslipController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -54,7 +55,6 @@ class PayslipController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      */
