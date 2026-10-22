@@ -18,7 +18,7 @@ class PositionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->factory(),
         ];
     }
 }
