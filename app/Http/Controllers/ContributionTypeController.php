@@ -15,7 +15,7 @@ class ContributionTypeController extends Controller
         ])->get();
         
         dd ($contributionTypes);
-        return Inertia::render('contribution-type/index', [
+        return Inertia::render('contribution_type/index', [
             'contributionTypes' => $contributionTypes,
         ]);
         //
