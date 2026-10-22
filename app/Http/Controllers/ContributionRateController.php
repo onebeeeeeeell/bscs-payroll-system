@@ -12,7 +12,7 @@ class ContributionRateController extends Controller
      */
     public function index()
     {
-        //
+         
     }
 
     /**
