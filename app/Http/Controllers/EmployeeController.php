@@ -1,8 +1,15 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Inertia\Inertia;
 use App\Models\Employee;
-use Illuminate\Http\Request;
+use App\Models\Department;
+use App\Models\Position;
+use App\Http\Requests\Employee\EmployeeRequest;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
+
 class EmployeeController extends Controller
 {
     /**
@@ -10,33 +17,51 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::select(['id', 'first_name', 'last_name', 'suffix', 'position_id', 'department_id', 'date_hired', 'daily_rate', 'sss_no', 'philhealth_no', 'pagibig_no', 'tin_no', 'status'])->with([
-          'positions:id,title',
-           'departments:id, department_name',
-           'attendances:id,employee_id,work_date,time_in,time_out,hours_worked,overtime_hours',
-           'payrolls:id,employee_id,payroll_period_id,user_id,gross_pay,total_deductions,net_pay,date_processed',
-           ])->get();
-           
-           dd($employees);
-           
-           return Inertia::render('employee/index', [
+        $search = request()->string('search')->trim()->toString();
+
+        $employees = Employee::query()
+            ->with(['position:id,title', 'department:id,department_name'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")
+                        ->orWhere('sss_no', 'like', "%{$search}%")
+                        ->orWhere('philhealth_no', 'like', "%{$search}%")
+                        ->orWhere('pagibig_no', 'like', "%{$search}%")
+                        ->orWhere('tin_no', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return Inertia::render('employee/index', [
             'employees' => $employees,
-            ]);//
+            'filters' => ['search' => $search],
+        ]);
     }
+
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('employee/create', [
+            'positions' => Position::query()->orderBy('title')->get(['id', 'title']),
+            'departments' => Department::query()->orderBy('department_name')->get(['id', 'department_name']),
+        ]);
     }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EmployeeRequest $request): RedirectResponse
     {
-        //
+        Employee::create($request->validated());
+
+        return to_route('employees.index')->with('success', 'Employee created successfully.');
     }
+
     /**
      * Display the specified resource.
      */
@@ -44,25 +69,36 @@ class EmployeeController extends Controller
     {
         //
     }
+
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Employee $employee)
+    public function edit(Employee $employee): Response
     {
-        //
+        return Inertia::render('employee/edit', [
+            'employee' => $employee,
+            'positions' => Position::query()->orderBy('title')->get(['id', 'title']),
+            'departments' => Department::query()->orderBy('department_name')->get(['id', 'department_name']),
+        ]);
     }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Employee $employee)
+    public function update(EmployeeRequest $request, Employee $employee): RedirectResponse
     {
-        //
+        $employee->update($request->validated());
+
+        return to_route('employees.index')->with('success', 'Employee updated successfully.');
     }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+
+        return to_route('employees.index')->with('success', 'Employee deleted successfully.');
     }
 }
