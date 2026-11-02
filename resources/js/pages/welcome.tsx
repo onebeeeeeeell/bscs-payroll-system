@@ -74,12 +74,10 @@ export default function Welcome() {
                             </Button>
                         ) : (
                             <>
-                                <Link href="/login" className="text-sm font-medium text-white/90 hover:text-white">
-                                    Log In
-                                </Link>
+                            
                                 <Button className="rounded-full bg-gradient-to-r from-[#0fb582] to-[#16d79b] px-6 font-semibold text-white" asChild>
                                     <Link href="/register">
-                                        Get Started <ArrowRight />
+                                        Login <ArrowRight />
                                     </Link>
                                 </Button>
                             </>

@@ -14,7 +14,7 @@ class AttendanceController extends Controller
     public function index()
     {
         $attendances = Attendance::select(['id', 'employee_id', 'work_date', 'time_in', 'time_out', 'hours_worked', 'overtime_hours'])->with([
-            'employees:id, first_name, last_name, suffix, position_id, department_id, date_hired, daily_rate, sss_no, philhealth_no, pagibig_no, tin_no, status',
+            'employee:id, first_name, last_name, suffix, position_id, department_id, date_hired, daily_rate, sss_no, philhealth_no, pagibig_no, tin_no, status',
         ])->get();
         dd($attendances);
         return Inertia::render('attendance/index', [
