@@ -18,7 +18,16 @@ class PositionFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->factory(),
+            'title' => $this->faker->randomElement([
+                'Accountant',
+                'HR Officer',
+                'Cashier',
+                'Warehouse Staff',
+                'Sales Associate',
+                'IT Support',
+                'Supervisor',
+                'Office Clerk',
+            ]),
         ];
     }
 }
